@@ -54,7 +54,7 @@ add_action('admin_menu', function(){
 			?>
 			<div class="wrap">
 				<h1 class="wp-heading-inline">LU ACM Coder's List</h1>
-				<a href="<?php add_query_arg(array('page' => 'coder-ranklist', 'refresh' => true));?>" class="page-title-a$
+				<a href="<?php add_query_arg(array('page' => 'coder-ranklist', 'refresh' => true));?>" class="page-title-a$">
 					Initiate Refresh
 				</a>
 
@@ -348,7 +348,11 @@ function cr_get_info_array( $handle, $judge ){
 	elseif('codechef' == $judge) $url = str_replace('{handle}', $handle, 'https://codechef-apijs.herokuapp.com/rating/{handle}');
 	else return false;
 	
-	$data = wp_remote_get($url);
+	$data = wp_remote_get($url);	
+	$response_code = (int) wp_remote_retrieve_response_code( $data );
+	if (200 !== $response_code) {
+		return false;
+	}
 	if(!is_wp_error($data)){
 		$json = $data['body'];
 		if($json) return json_decode($json);
